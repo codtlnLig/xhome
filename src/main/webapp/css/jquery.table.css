@@ -1,0 +1,219 @@
+/*表格样式*/
+.tablePanel {
+	
+}
+
+.main_table {
+	width: 780px;
+	font-size: 14px;
+	overflow: hidden;
+	border: 1px #cccccc solid;
+	border-bottom: none;
+}
+
+.main_table th {
+	text-align: left;
+	color: #2E2E2E;
+	line-height: 26px;
+	height: 30px;
+	font-size: 12px;
+	font-weight: normal;
+	border-right: #c4cace 1px solid;
+	background-color: #E3E3E3;
+	padding-left: 5px;
+	border-bottom: #c4cace 1px solid;
+	background-image: url('../images/highlight.png');
+}
+
+.main_table th em {
+	margin: 5px;
+	width: 16px;
+	height: 16px;
+	background: url('../images/sort_both.png') no-repeat center right;
+	display: block;
+	float: right;
+}
+
+.main_table .state1 em {
+	background: url('../images/sort_both.png') no-repeat center right;
+}
+
+.main_table .state2 em {
+	background: url('../images/sort_asc.png') no-repeat center right;
+}
+
+.main_table .state3 em {
+	background: url('../images/sort_desc.png') no-repeat center right;
+}
+
+.main_table th:hover {
+	cursor: pointer;
+}
+
+.main_table td {
+	border-bottom: #c4cace 1px solid;
+	border-left: 0px;
+	border-right: #c4cace 1px solid;
+	line-height: 25px;
+	font-size: 12px;
+	padding-left: 5px;
+	overflow: hidden;
+}
+
+.main_table .r1 td {
+	background: #fff;
+}
+
+.main_table .r2 td {
+	background: #f5f5f5;
+}
+
+.main_table tbody tr {
+	background: #ffffff;
+}
+
+.main_table tbody tr:hover {
+	background: #f8f8f8;
+}
+
+.main_table td a {
+	overflow: hidden;
+}
+
+.main_table tfoot {
+	background: #fff;
+}
+
+.main_table tfoot td {
+	border-right: none;
+	line-height: 16px;
+	padding-top: 5px;
+}
+
+.page {
+	width: 50px;
+	margin-left: 5px;
+}
+
+.main_table a {
+	color: #000;
+	cursor: pointer;
+}
+
+.main_table a:hover {
+	text-decoration: underline;
+	color: #1E5494;
+}
+
+.main_table_bg {
+	background: #f8fbfd;
+}
+
+.main_table_over {
+	background: #f3f3f3;
+}
+
+.main_table_select {
+	background: #cfe7fe;
+}
+
+#_pageBar {
+	border-right: none;
+}
+
+.pageBtnTable tr td {
+	border-bottom: none;
+	vertical-align: middle;
+}
+
+.firstPage {
+	width: 27px;
+	height: 20px;
+	cursor: pointer;
+	border: none;
+	background: url(../images/start.png) no-repeat;
+}
+
+.lastPage {
+	width: 27px;
+	height: 20px;
+	cursor: pointer;
+	border: none;
+	background: none;
+	background: url(../images/end.png) no-repeat;
+}
+
+.prevPage {
+	cursor: pointer;
+	border: none;
+	background: none;
+	width: 24px;
+	height: 24px;
+	background: url(../images/previous.png) no-repeat;
+}
+
+.nextPage {
+	cursor: pointer;
+	border: none;
+	background: none;
+	width: 24px;
+	height: 24px;
+	background: url(../images/next.png) no-repeat;
+}
+
+.step_page {
+	
+}
+
+.buttonPanel {
+	margin-left: 0px;
+	margin-top: 2px;
+	margin-bottom: 5px; height : auto;
+	vertical-align: middle;
+	height: auto;
+}
+
+.buttonPanel label {
+	color: #1E5494;
+	font-weight: bold;
+	line-height: 16px;
+}
+
+.buttonPanel a {
+	vertical-align: middle;
+}
+
+.buttonPanel input {
+	background: #ffffff;
+	width: 160px;
+	border-radius: 2px;
+	font-family: 'Verdana', '宋体';
+	font-size: 12px;
+	position: relative;
+	top: 1px;
+}
+
+.buttonPanel select {
+	height: 22px;
+	width: 120px;
+	line-height: 16px;
+	border-radius: 4px 4px 4px 4px;
+	border: 1px solid #7192B3;
+	font-family: 'Verdana', '宋体';
+	font-size: 12px;
+	position: relative;
+	top: 1px;
+}
+
+b {
+	color: #946;
+}
+
+.cke_button__save_icon {
+	display: none;
+}
+
+.query_span {
+	margin-right: 10px;
+	float: right;
+}

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+     http://www.springframework.org/schema/jee 
+     http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context-3.1.xsd
+     http://www.springframework.org/schema/util
+     http://www.springframework.org/schema/util/spring-util-3.1.xsd
+     http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+     http://www.springframework.org/schema/aop
+     http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+
+	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="net.swa.*.service"></context:component-scan>
+	<bean id="config" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>/WEB-INF/classes/conf/jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 不使用连接池 -->
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${driver}"></property>
+		<property name="url" value="${url}"></property>
+		<property name="username" value="${username}"></property>
+		<property name="password" value="${password}"></property>
+	</bean>
+	<!-- -->
+
+	<!--
+		.proxool 配置失败 <bean id="dataSource" class="org.logicalcobwebs.proxool.ProxoolDataSource"> <property name="driver" value="${driver}"></property> <property name="driverUrl"
+		value="${url}"></property> <property name="user" value="${username}"></property> <property name="password" value="${password}"></property> <property name="alias"
+		value="dewei"></property> <property name="prototypeCount" value="2"></property> <property name="maximumConnectionCount" value="5"></property> <property
+		name="minimumConnectionCount" value="2"></property> <property name="trace" value="true"></property> <property name="verbose" value="true"></property> </bean> <bean
+		id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close"> <property name="driverClass" value="${driver}"></property> <property
+		name="jdbcUrl" value="${url}"></property> <property name="user" value="${username}"></property> <property name="password" value="${password}"></property> <property
+		name="minPoolSize" value="2"></property> <property name="maxPoolSize" value="10"></property> <property name="maxIdleTime" value="1800"></property> <property
+		name="acquireIncrement" value="2"></property> <property name="maxStatements" value="0"></property> <property name="initialPoolSize" value="2"></property> <property
+		name="idleConnectionTestPeriod" value="1800"></property> <property name="acquireRetryAttempts" value="30"></property> <property name="breakAfterAcquireFailure"
+		value="true"></property> <property name="testConnectionOnCheckout" value="false"></property> </bean>
+	-->
+
+
+	<!--
+		tomcat jdbc pool数据源配置 <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close"> <property name="poolProperties"> <bean
+		class="org.apache.tomcat.jdbc.pool.PoolProperties"> <property name="driverClassName" value="${driver}"/> <property name="url" value="${url}"/> <property name="username"
+		value="${username}"/> <property name="password" value="${password}"/> <property name="jmxEnabled" value="true"/> <property name="testWhileIdle" value="true"/> <property
+		name="testOnBorrow" value="true"/> <property name="testOnReturn" value="false"/> <property name="validationInterval" value="30000"/> <property name="validationQuery"
+		value="SELECT 1"/> <property name="timeBetweenEvictionRunsMillis" value="30000"/> <property name="maxActive" value="100"/> <property name="initialSize" value="10"/>
+		<property name="maxWait" value="10000"/> <property name="minEvictableIdleTimeMillis" value="30000"/> <property name="minIdle" value="10"/> <property name="logAbandoned"
+		value="false"/> <property name="removeAbandoned" value="true"/> <property name="removeAbandonedTimeout" value="60"/> <property name="jdbcInterceptors"
+		value="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"/> </bean> </property> </bean>
+	-->
+
+	<!-- Hibernate SessionFactory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.current_session_context_class">thread</prop>
+				<prop key="hibernate.dialect">
+					${hibernate.dialect}
+				</prop>
+				<prop key="hibernate.show_sql">
+					${hibernate.show_sql}
+				</prop>
+				 <prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext
+				</prop>
+			</props>
+		</property>
+		<!--
+			packagesToScan属性，它是根据value中定义的路径来扫描其下所有的注解实体类。注意此处的value值最后没有.*
+			如果加上的话，那么服务器启动和程序运行时都不会报错，但是当你的代码需要用到这个类的时候，就会出现异常，提示你找不到实体。
+		-->
+		<property name="packagesToScan">
+			<list>
+				<value>net.swa.*.beans.entity</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!--
+		默认数据源的事务AOP声明-->
+	<aop:config>
+		<aop:pointcut id="allServiceMethod" expression="execution(* net.swa..service.*.*(..))" />
+		<aop:advisor pointcut-ref="allServiceMethod" advice-ref="txadvice" />
+	</aop:config>
+	<!--
+		基本事务定义,默认init* select* get*
+		find*方法的事务为readonly,其余方法按默认设置，建议不需要事务的增删改方法以noTran开头
+	-->
+	<tx:advice id="txadvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="init*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="select*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="query*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="get*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="find*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="exportExcel" read-only="true" propagation="REQUIRED" />
+			<tx:method name="search*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="commonFind" read-only="true" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" isolation="READ_COMMITTED" />
+			
+			<tx:method name="shezhiBy*" propagation="REQUIRED" isolation="READ_COMMITTED" />
+			<tx:method name="shenji*" read-only="true" propagation="REQUIRED"  />
+			
+			
+			<tx:method name="doTask" propagation="REQUIRED" isolation="READ_COMMITTED" />
+			<tx:method name="commonAdd" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="commonDelete" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="Exception" />
+			<tx:method name="commonUpdate" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="Exception" />
+			<tx:method name="commonUpdateStatus" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="Exception" />
+			<tx:method name="batch*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="Exception" />
+			<tx:method name="update*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="Exception" />
+			<tx:method name="modify*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="Exception" />
+			<tx:method name="reset*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="Exception" />
+			<tx:method name="add*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="Exception" />
+			<tx:method name="delete*" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="Exception" />
+			<tx:method name="login" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="Exception" />
+			<tx:method name="logout" propagation="REQUIRED" isolation="READ_COMMITTED" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+	
+		<!-- 导入Spring配置文件<import resource="component-dewei.xml" /> -->
+</beans>
